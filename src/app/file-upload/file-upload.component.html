@@ -1,0 +1,4 @@
+<input type="text" [(ngModel)]="password" placeholder="Enter password" />
+<input type="file" (change)="onFileChange($event)" placeholder="Select file"/>
+<button (click)="encryptFile()">Encrypt</button>
+<button (click)="decryptFile()">Decrypt</button>
