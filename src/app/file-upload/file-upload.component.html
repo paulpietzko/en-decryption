@@ -1,10 +1,29 @@
 <div class="container">
-  <input
-    type="file"
-    (change)="onFileChange($event)"
-    placeholder="Select file"
-  />
+  <div class="file-upload-wrapper" [class.success]="uploadSuccess" [class.error]="uploadError"
+       (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+    <input type="file" (change)="onFileChange($event)" hidden #fileInput>
+    <div class="file-dropper" (click)="fileInput.click()">
+      Drag and Drop file or <button class="browse-button"><fa-icon [icon]="faUpload"></fa-icon></button>
+    </div>
+  </div>
+
+  <div class="file-details" *ngIf="fileName">
+    <div class="file-info">
+      <fa-icon [icon]="faFile"></fa-icon>
+      <div class="file-info-text">
+        <span class="file-name">{{ fileName }}</span>
+        <span class="file-size">{{ fileSize | number: '1.2-2' }} MB</span>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="progress" [style.width.%]="uploadProgress"></div>
+    </div>
+    <button class="cancel-upload" (click)="cancelUpload()">×</button>
+  </div>
+
   <input type="text" [(ngModel)]="password" placeholder="Enter password" />
-  <button (click)="encryptFile()">Encrypt</button>
-  <button (click)="decryptFile()">Decrypt</button>
+  <div class="buttons">
+    <button (click)="encryptFile()">Encrypt</button>
+    <button (click)="decryptFile()">Decrypt</button>
+  </div>
 </div>
