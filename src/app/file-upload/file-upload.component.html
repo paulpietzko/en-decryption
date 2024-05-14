@@ -1,40 +1,50 @@
 <div class="container">
-  <h1>En-Decryption</h1>
-  <div class="file-upload-wrapper" [class.success]="uploadSuccess" [class.error]="uploadError"
-       (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
-    <input type="file" (change)="onFileChange($event)" hidden #fileInput>
-    <div class="file-dropper" (click)="fileInput.click()">
-      Drag and Drop file or <button class="browse-button"><fa-icon [icon]="faUpload"></fa-icon></button>
-    </div>
-  </div>
-
-  <div class="file-details" *ngIf="fileName">
-    <div class="file-info">
-      <fa-icon [icon]="faFile"></fa-icon>
-      <div class="file-info-text">
-        <span class="file-name">{{ fileName }}</span>
-        <span class="file-size">{{ fileSize | number: '1.2-2' }} MB</span>
+  <div class="content">
+    <h1>En-Decryption</h1>
+    <div class="file-upload-wrapper" [class.success]="uploadSuccess" [class.error]="uploadError"
+         (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
+      <input type="file" (change)="onFileChange($event)" hidden #fileInput>
+      <div class="file-dropper" (click)="fileInput.click()">
+        <fa-icon [icon]="faUpload" size="3x"></fa-icon>
+        <p>Drag files to upload</p>
       </div>
     </div>
-    <div class="progress-bar">
-      <div class="progress" [style.width.%]="uploadProgress"></div>
-    </div>
-    <button class="cancel-upload" (click)="cancelUpload()">×</button>
-  </div>
 
-  <input matInput matTooltip="Password must be at least 8 characters long, contain uppercase and lowercase letters, a number, and a special character." type="text" [(ngModel)]="password" placeholder="Enter password" />
+    <div class="file-details" *ngIf="fileName">
+      <div class="file-info">
+        <fa-icon [icon]="faFile"></fa-icon>
+        <div class="file-info-text">
+          <span class="file-name">{{ fileName }}</span>
+          <span class="file-size">{{ fileSize | number: '1.2-2' }} MB</span>
+        </div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress" [style.width.%]="uploadProgress"></div>
+      </div>
+      <button mat-icon-button class="cancel-upload" (click)="cancelUpload()">×</button>
+    </div>
+
+    <div class="form-fields">
+      <mat-form-field appearance="outline" class="password-field">
+        <mat-label>Enter password</mat-label>
+        <input matInput matTooltip="Password must be at least 8 characters long, contain uppercase and lowercase letters, a number, and a special character." type="password" [(ngModel)]="password">
+      </mat-form-field>
+    
+      <mat-form-field appearance="outline" class="encryption-method-field">
+        <mat-label>Choose encryption method</mat-label>
+        <mat-select [(ngModel)]="selectedMethod">
+          <mat-option value="AES">AES</mat-option>
+          <mat-option value="DES">DES</mat-option>
+          <mat-option value="TripleDES">TripleDES</mat-option>
+          <mat-option value="Rabbit">Rabbit</mat-option>
+          <mat-option value="RC4">RC4</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   
-  <label for="encryption-method">Choose encryption method:</label>
-  <select id="encryption-method" [(ngModel)]="selectedMethod">
-    <option value="AES">AES</option>
-    <option value="DES">DES</option>
-    <option value="TripleDES">TripleDES</option>
-    <option value="Rabbit">Rabbit</option>
-    <option value="RC4">RC4</option>
-  </select>
-  
-  <div class="buttons">
-    <button (click)="encryptFile()">Encrypt</button>
-    <button (click)="decryptFile()">Decrypt</button>
+    <div class="buttons">
+      <button mat-raised-button class="glass-button" color="primary" (click)="encryptFile()">Encrypt</button>
+      <button mat-raised-button class="glass-button" color="accent" (click)="decryptFile()">Decrypt</button>
+    </div>
   </div>
 </div>

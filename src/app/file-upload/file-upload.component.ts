@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EncryptionService } from '../services/encryption.service';
 import { PasswordValidationService } from '../services/password-validation.service';
@@ -6,6 +6,9 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
 import { faUpload, faFile } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -17,13 +20,16 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     FormsModule,
     MatSnackBarModule,
     MatTooltipModule,
+    MatInputModule,
+    MatSelectModule,
+    MatButtonModule,
     FontAwesomeModule,
   ],
   templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],  // Add this line
 })
 export class FileUploadComponent {
+  // Icons
   faUpload = faUpload;
   faFile = faFile;
 
@@ -59,7 +65,7 @@ export class FileUploadComponent {
   uploadFile(file: File | null): void {
     if (file) {
       this.fileName = file.name;
-      this.fileSize = file.size / (1024 * 1024);
+      this.fileSize = file.size / (1024 * 1024); // Convert bytes to MB
       this.reader = new FileReader();
       this.reader.onprogress = (event) => {
         if (event.loaded && event.total) {
@@ -90,8 +96,8 @@ export class FileUploadComponent {
       this.fileName = '';
       this.fileSize = 0;
       this.fileContent = null;
-      this.uploadSuccess = false;
-      this.uploadError = false;
+      this.uploadSuccess = false; // Reset success flag
+      this.uploadError = false;   // Reset error flag
       this.showSnackBar('File upload cancelled!', 'error');
     }
   }
@@ -113,7 +119,6 @@ export class FileUploadComponent {
 
     const contentStr = this.fileContent.toString();
     const encryptedWithMac = this.encryptionService.encrypt(contentStr, this.password, this.selectedMethod);
-
     this.downloadFile(encryptedWithMac, `${this.fileName}.encrypted`);
     this.showSnackBar('File encrypted successfully!', 'success');
   }
@@ -124,16 +129,13 @@ export class FileUploadComponent {
       return;
     }
 
-    const decryptedText = this.encryptionService.decrypt(this.fileContent.toString(), this.password, this.selectedMethod);
-
-    if (decryptedText === null) {
-      this.showSnackBar('File integrity check failed!', 'error');
-      alert('File integrity check failed!');
-      return;
+    try {
+      const decryptedText = this.encryptionService.decrypt(this.fileContent.toString(), this.password, this.selectedMethod);
+      this.downloadFile(decryptedText, this.fileName.replace('.encrypted', ''));
+      this.showSnackBar('File decrypted successfully!', 'success');
+    } catch (error: any) {
+      this.showSnackBar(error.message, 'error');
     }
-
-    this.downloadFile(decryptedText, this.fileName.replace('.encrypted', ''));
-    this.showSnackBar('File decrypted successfully!', 'success');
   }
 
   downloadFile(data: string, filename: string): void {
@@ -151,7 +153,7 @@ export class FileUploadComponent {
   showSnackBar(message: string, type: 'success' | 'error'): void {
     this.snackBar.open(message, 'Close', {
       duration: 3000,
-      panelClass: type,
+      panelClass: type
     });
   }
 }

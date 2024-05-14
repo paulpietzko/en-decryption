@@ -28,18 +28,19 @@ export class EncryptionService {
     }
 
     const mac = CryptoJS.HmacSHA256(encrypted, password).toString();
-    return encrypted + ':' + mac;
+    return `${encrypted}:${mac}`;
   }
 
-  decrypt(encryptedWithMac: string, password: string, method: string): string | null {
-    const [encrypted, mac] = encryptedWithMac.split(':');
-
+  decrypt(content: string, password: string, method: string): string {
+    const [encrypted, mac] = content.split(':');
     const newMac = CryptoJS.HmacSHA256(encrypted, password).toString();
+
     if (newMac !== mac) {
-      return null;
+      throw new Error('File integrity check failed!');
     }
 
     let decrypted;
+
     switch (method) {
       case 'DES':
         decrypted = CryptoJS.DES.decrypt(encrypted, password);
