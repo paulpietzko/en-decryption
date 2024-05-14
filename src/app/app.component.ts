@@ -4,6 +4,7 @@ import { RouterOutlet } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { FileUploadComponent } from './file-upload/file-upload.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     RouterOutlet,
     FormsModule,
     FileUploadComponent,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatSnackBarModule
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

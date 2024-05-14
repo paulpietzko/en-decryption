@@ -1,4 +1,5 @@
 <div class="container">
+  <h1>En-Decryption</h1>
   <div class="file-upload-wrapper" [class.success]="uploadSuccess" [class.error]="uploadError"
        (drop)="onFileDrop($event)" (dragover)="onDragOver($event)">
     <input type="file" (change)="onFileChange($event)" hidden #fileInput>
@@ -21,7 +22,17 @@
     <button class="cancel-upload" (click)="cancelUpload()">×</button>
   </div>
 
-  <input type="text" [(ngModel)]="password" placeholder="Enter password" />
+  <input matInput matTooltip="Password must be at least 8 characters long, contain uppercase and lowercase letters, a number, and a special character." type="text" [(ngModel)]="password" placeholder="Enter password" />
+  
+  <label for="encryption-method">Choose encryption method:</label>
+  <select id="encryption-method" [(ngModel)]="selectedMethod">
+    <option value="AES">AES</option>
+    <option value="DES">DES</option>
+    <option value="TripleDES">TripleDES</option>
+    <option value="Rabbit">Rabbit</option>
+    <option value="RC4">RC4</option>
+  </select>
+  
   <div class="buttons">
     <button (click)="encryptFile()">Encrypt</button>
     <button (click)="decryptFile()">Decrypt</button>
