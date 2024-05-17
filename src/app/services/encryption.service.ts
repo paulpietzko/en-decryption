@@ -1,29 +1,39 @@
 import { Injectable } from '@angular/core';
 import * as CryptoJS from 'crypto-js';
+import * as LZString from 'lz-string';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EncryptionService {
+  compress(data: string): string {
+    return LZString.compress(data);
+  }
+
+  decompress(data: string): string {
+    return LZString.decompress(data);
+  }
+
   encrypt(content: string, password: string, method: string): string {
+    const compressedContent = this.compress(content);
     let encrypted: string;
 
     switch (method) {
       case 'DES':
-        encrypted = CryptoJS.DES.encrypt(content, password).toString();
+        encrypted = CryptoJS.DES.encrypt(compressedContent, password).toString();
         break;
       case 'TripleDES':
-        encrypted = CryptoJS.TripleDES.encrypt(content, password).toString();
+        encrypted = CryptoJS.TripleDES.encrypt(compressedContent, password).toString();
         break;
       case 'Rabbit':
-        encrypted = CryptoJS.Rabbit.encrypt(content, password).toString();
+        encrypted = CryptoJS.Rabbit.encrypt(compressedContent, password).toString();
         break;
       case 'RC4':
-        encrypted = CryptoJS.RC4.encrypt(content, password).toString();
+        encrypted = CryptoJS.RC4.encrypt(compressedContent, password).toString();
         break;
       case 'AES':
       default:
-        encrypted = CryptoJS.AES.encrypt(content, password).toString();
+        encrypted = CryptoJS.AES.encrypt(compressedContent, password).toString();
         break;
     }
 
@@ -60,6 +70,7 @@ export class EncryptionService {
         break;
     }
 
-    return decrypted.toString(CryptoJS.enc.Utf8);
+    const decompressedContent = this.decompress(decrypted.toString(CryptoJS.enc.Utf8));
+    return decompressedContent;
   }
 }
